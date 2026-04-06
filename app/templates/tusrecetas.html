@@ -1,0 +1,125 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Mi usuario
+{% endblock %}
+
+{% block main %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+            <div class="card shadow-sm border-0 bg-white">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        {% if propia %}
+                        <h4 class="fw-bold mb-0">🍳 Tus Recetas</h4>
+                        <a href="/agregar" class="btn btn-primary btn-sm px-3 rounded-pill">
+                            <i class="bi bi-plus-lg"></i> Nueva Receta
+                        </a>
+                        {% else %}
+                        <h4 class="fw-bold mb-0">🍳 Recetas de {{nombre}}</h4>
+                        {% endif %}
+                    </div>
+
+                    {% if recetas %}
+                        <div class="list-group list-group-flush border rounded-3">
+                            {% for receta in recetas %}
+                            <div class="list-group-item list-group-item-action py-3">
+                                <div class="d-flex align-items-center justify-content-between flex-nowrap">
+                                    
+                                    <div class="d-flex align-items-center gap-3 overflow-hidden">
+                                        <div class="text-truncate">
+                                            <h6 class="fw-bold mb-0 text-dark d-inline">{{ receta['nombre'] }}</h6>
+                                            
+                                            {% if receta['publica'] == 1 %}
+                                                <span class="badge rounded-pill bg-success-subtle text-success border border-success-subtle ms-1" style="font-size: 0.65rem;">
+                                                    <i class="bi bi-globe2"></i>
+                                                </span>
+                                            {% else %}
+                                                <span class="badge rounded-pill bg-light text-secondary border ms-1" style="font-size: 0.65rem;">
+                                                    <i class="bi bi-lock-fill"></i>
+                                                </span>
+                                            {% endif %}
+                                        </div>
+
+                                        <small class="text-muted flex-shrink-0 d-none d-sm-inline">
+                                            <i class="bi bi-clock"></i> {{ receta['tiempo'] }}'
+                                        </small>
+                                    </div>
+
+                                    <div class="d-flex gap-1 flex-shrink-0 ms-2">
+                                        <a href="{{ url_for('receta', id=receta['id_receta']) }}" 
+                                        class="btn btn-sm btn-light border-0 text-primary p-1 px-2" title="Ver">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        {% if propia %}
+                                        <a href="{{ url_for('editar_receta', id=receta['id_receta']) }}" 
+                                        class="btn btn-sm btn-light border-0 text-secondary p-1 px-2" title="Editar">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <form action="{{ url_for('eliminar_receta') }}" method="post" class="d-inline">
+                                            <input type="hidden" name="id_receta" value="{{ receta['id_receta'] }}">
+                                            <button type="submit" class="btn btn-sm btn-light border-0 text-danger p-1 px-2" 
+                                                    onclick="return confirm('¿Eliminar receta?');">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                        {% endif %}
+                                    </div>
+
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% elif propia %}
+                        <div class="text-center py-5 bg-light rounded-3 border border-dashed">
+                            <i class="bi bi-journal-x display-4 text-muted"></i>
+                            <p class="text-muted mt-2">No has creado recetas aún.</p>
+                            <a href="/agregar" class="btn btn-outline-primary btn-sm mt-2">¡Empezar ahora!</a>
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5 bg-light rounded-3 border border-dashed">
+                            <i class="bi bi-journal-x display-4 text-muted"></i>
+                            <p class="text-muted mt-2">No ha creado recetas aún.</p>
+                    {% endif %}
+                    
+                    {% if propia %}
+                    <h5 class="fw-bold mb-3 p-2">⭐ Recetas Guardadas</h5>
+                    {% endif %}
+                    {% if recetas_favoritas and propia %}
+                        <div class="list-group list-group-flush border rounded-3 overflow-hidden">
+                            {% for receta in recetas_favoritas %}
+                            <div class="list-group-item list-group-item-action py-3 bg-light-subtle">
+                                <div class="d-flex align-items-center justify-content-between flex-nowrap">
+                                    <div class="text-truncate">
+                                        <h6 class="fw-bold mb-0 text-dark text-truncate">{{ receta['nombre'] }}</h6>
+                                        <small class="text-muted">
+                                            De: {{ receta['autor'] }} • {{ receta['comida']|capitalize }}
+                                        </small>
+                                    </div>
+                                    <div class="d-flex gap-1 flex-shrink-0 ms-2">
+                                        <a href="{{ url_for('receta', id=receta['id_receta']) }}" class="btn btn-sm btn-light text-primary border-0"><i class="bi bi-eye"></i></a>
+                                        <form action="{{ url_for('marcar_favorita') }}" method="post" class="d-inline">
+                                            <input type="hidden" name="id_receta" value="{{ receta['id_receta'] }}">
+                                            <button type="submit" class="btn btn-sm btn-light text-warning border-0" title="Quitar de favoritos">
+                                                <i class="bi bi-bookmark-star-fill"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% elif propia %}
+                        <div class="text-center py-4 border rounded-3 border-dashed">
+                            <p class="text-muted mb-0 small">No tienes recetas guardadas.</p>
+                            <a href="/" class="small text-decoration-none">Explorar la comunidad</a>
+                        </div>
+                    {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

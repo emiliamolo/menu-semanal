@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Cambiar contraseña
+{% endblock %}
+
+{% block main %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6 col-lg-5">
+            
+            <form action="/olvide_contraseña" method="post" class="card shadow p-4 bg-white">
+                
+                <h4 class="mb-4 text-center fw-semibold">¿Olvidaste tu contraseña?</h4>
+                
+                <!-- Contraseña actual -->
+                <div class="mb-3 text-start">
+                    <label for="actual" class="form-label fw-semibold">Nombre de usuario</label>
+                    <input type="text" class="form-control" id="actual" name="user" placeholder="Ingrese su nombre de usuario">
+                </div>
+
+                <!-- Nueva contraseña -->
+                <div class="mb-3 text-start">
+                    <label for="nueva" class="form-label fw-semibold">o con tu correo electrónico</label>
+                    <input type="email" class="form-control" id="nueva" name="mail" placeholder="Ingrese su correo electrónico">
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Enviar correo electrónico</button>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

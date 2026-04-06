@@ -1,0 +1,41 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Cambiar contraseña
+{% endblock %}
+
+{% block main %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6 col-lg-5">
+            
+            <form action="/cambiar_contraseña" method="post" class="card shadow p-4 bg-white">
+                
+                <h4 class="mb-4 text-center fw-semibold">Cambiar Contraseña</h4>
+                
+                <!-- Contraseña actual -->
+                <div class="mb-3 text-start">
+                    <label for="actual" class="form-label fw-semibold">Contraseña actual</label>
+                    <input type="password" class="form-control" id="actual" name="actual" placeholder="Ingresa tu contraseña actual" required>
+                </div>
+
+                <!-- Nueva contraseña -->
+                <div class="mb-3 text-start">
+                    <label for="nueva" class="form-label fw-semibold">Nueva contraseña</label>
+                    <input type="password" class="form-control" id="nueva" name="nueva" placeholder="Ingresa nueva contraseña" required>
+                </div>
+
+                <!-- Confirmar nueva contraseña -->
+                <div class="mb-3 text-start">
+                    <label for="confirmar" class="form-label fw-semibold">Confirmar nueva contraseña</label>
+                    <input type="password" class="form-control" id="confirmar" name="confirmar" placeholder="Repite nueva contraseña" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100">Actualizar contraseña</button>
+
+            </form>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

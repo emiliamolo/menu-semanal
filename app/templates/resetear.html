@@ -1,0 +1,23 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Nueva contraseña
+{% endblock %}
+
+{% block main %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-7">
+<form method="post" class="card p-4 shadow">
+    <h4 class="mb-3">Nueva contraseña</h4>
+
+    <input class="form-control mb-3" name="nueva" type="password" placeholder="Nueva contraseña" required>
+    <input class="form-control mb-3" name="confirmacion" type="password" placeholder="Confirmar contraseña" required>
+
+    <button class="btn btn-primary">Guardar</button>
+</form>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

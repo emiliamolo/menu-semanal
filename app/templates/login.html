@@ -1,0 +1,26 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Iniciar sesión
+{% endblock %}
+
+{% block main %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-10 col-md-7 col-lg-6">
+    <form action="/login" method="post" class="card shadow-lg p-4 border-0 bg-light">
+        <h4 class="mb-4 text-center fw-semibold">Iniciar sesión</h4>
+        <div class="mb-3">
+            <input autocomplete="off" autofocus class="form-control" id="username" name="usuario" placeholder="Usuario" type="text">
+        </div>
+        <div class="mb-3">
+            <input class="form-control" id="password" name="contraseña" placeholder="Contraseña" type="password">
+        </div>
+        <a href="{{ url_for('olvide_contraseña') }}" class="link-secondary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"> Olvidé mi contraseña </a>
+        <button class="btn btn-primary w-100 mt-3" type="submit">Iniciar sesión</button>
+    </form>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

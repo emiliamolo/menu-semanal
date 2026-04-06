@@ -1,0 +1,107 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Editar menu
+{% endblock %}
+
+{% block main %}
+<form method="POST" class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold text-dark mb-0">✏️ Editar Mi Menú Semanal</h3>
+    </div>
+
+    <div class="table-responsive shadow-sm rounded-3 border bg-white mb-4">
+        <table class="table align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th class="py-3 px-4 text-muted fw-bold" style="width: 150px;">Momento</th>
+                    {% for dia in dias %}
+                        <th class="py-3 text-center fw-bold">{{ dia }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th class="px-4 text-secondary"><i class="bi bi-cup-hot me-2"></i>Desayuno</th>
+                    {% for i in range(7) %}
+                        <td class="p-1">
+                            <select name="slot_{{ i }}" class="select-tom form-select border-0 bg-light">
+                                {% for r in recetas %}
+                                    <option value="{{ r.id_receta }}" 
+                                        {% if r.id_receta == menu.desayunos[i].id_receta %}selected{% endif %}>
+                                        {{ r.nombre }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    {% endfor %}
+                </tr>
+
+                <tr>
+                    <th class="px-4 text-secondary"><i class="bi bi-sun me-2"></i>Almuerzo</th>
+                    {% for i in range(7) %}
+                        <td class="p-1">
+                            <select name="slot_{{ i+7 }}" class="select-tom form-select border-0 bg-light">
+                                {% for r in recetas %}
+                                    <option value="{{ r.id_receta }}" 
+                                        {% if r.id_receta == menu.cenas[i].id_receta %}selected{% endif %}>
+                                        {{ r.nombre }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    {% endfor %}
+                </tr>
+
+                <tr>
+                    <th class="px-4 text-secondary"><i class="bi bi-moon-stars me-2"></i>Cena</th>
+                    {% for i in range(7) %}
+                        <td class="p-2">
+                            <select name="slot_{{ i + 14}}" class="select-tom form-select border-0 bg-light">
+                                {% for r in recetas %}
+                                    <option value="{{ r.id_receta }}" 
+                                        {% if r.id_receta == menu.cenas[i+7].id_receta %}selected{% endif %}>
+                                        {{ r.nombre }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                    {% endfor %}
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-success px-5 rounded-pill shadow-sm fw-bold">
+            <i class="bi bi-check-lg me-2"></i>Guardar Todos los Cambios
+        </button>
+        <a href="{{ url_for('ver_menus') }}" class="btn btn-outline-secondary px-5 rounded-pill fw-bold">
+            Cancelar
+        </a>
+    </div>
+</form>
+<link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+
+<script>
+    document.querySelectorAll('.select-tom').forEach((el) => {
+        new TomSelect(el, {
+            create: false,
+            allowEmptyOption: true,
+            maxOptions: 100,
+            // Este plugin ayuda a separar el input del valor seleccionado
+            plugins: ['dropdown_input'], 
+            onFocus: function() {
+                // Opcional: limpiar el texto visible al hacer focus si prefieres
+            },
+            render: {
+                // Personalizamos cómo se ve el item seleccionado para que no se mueva
+                item: function(data, escape) {
+                    return '<div class="py-0">' + escape(data.text) + '</div>';
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

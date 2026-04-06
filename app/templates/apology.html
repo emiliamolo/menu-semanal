@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    {{codigo}} - {{mensaje}}
+{% endblock %}
+
+{% block main %}
+    <div class="mb-4">
+        <span class="display-1 fw-bold text-danger">{{ codigo }}</span>
+    </div>
+    
+    <h3 class="mb-3 text-secondary">¡Ups! Algo salió mal</h3>
+    
+    <p class="lead text-muted mb-4">
+        {{ mensaje }}
+    </p>
+{% endblock %}

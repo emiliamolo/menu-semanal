@@ -1,0 +1,121 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Mi menú semanal
+{% endblock %}
+
+{% block main %}
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 id="contenido-menu-completo" class="fw-bold text-dark mb-0">📅 Mi Menú Semanal</h3>
+        <div class="d-none d-md-block text-muted small">
+            <i class="bi bi-info-circle me-1 noPdf"></i> Haz clic en una receta para ver detalles
+        </div>
+    </div>
+
+    <div id="contenido-menu-completo" class="table-responsive d-none d-md-block shadow-sm rounded-3 border">
+        <table class="table table-hover align-middle mb-0 bg-white">
+            <thead class="table-light">
+                <tr>
+                    <th class="py-3 px-4 text-muted fw-bold" style="width: 150px;">Momento</th>
+                    {% for dia in dias %}
+                        <th class="py-3 text-center fw-bold">{{ dia }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th class="px-4 text-secondary"><i class="bi bi-cup-hot me-2"></i>Desayuno</th>
+                    {% for i in range(7) %}
+                        <td class="text-center">
+                            <a href="/receta/{{ desayunos[i]['id_receta'] }}" class="text-decoration-none fw-medium link-primary small">
+                                {{ desayunos[i]["nombre"] }}
+                            </a>
+                        </td>
+                    {% endfor %}
+                </tr>
+
+                <tr>
+                    <th class="px-4 text-secondary"><i class="bi bi-sun me-2"></i>Almuerzo</th>
+                    {% for i in range(7) %}
+                        <td class="text-center">
+                            <a href="/receta/{{cenas[i+7]['id_receta']}}" class="text-decoration-none fw-medium link-success small">
+                                {{ cenas[i]["nombre"] }}
+                            </a>
+                        </td>
+                    {% endfor %}
+                </tr>
+
+                <tr>
+                    <th class="px-4 text-secondary"><i class="bi bi-moon-stars me-2"></i>Cena</th>
+                    {% for i in range(7) %}
+                        <td class="text-center">
+                            <a href="/receta/{{cenas[i]['id_receta']}}" class="text-decoration-none fw-medium link-indigo small" style="color: #6610f2;">
+                                {{ cenas[i+7]["nombre"] }}
+                            </a>
+                        </td>
+                    {% endfor %}
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div id="contenido-menu-completo" class="d-md-none">
+        {% for i in range(7) %}
+            <div class="card mb-3 shadow-sm border-0 overflow-hidden">
+                <div class="card-header bg-primary text-white fw-bold py-2">
+                    {{ dias[i] }}
+                </div>
+                <div class="card-body p-0">
+                    <div class="list-group list-group-flush">
+                        <a href="/receta/{{ desayunos[i]['id_receta'] }}" class="list-group-item list-group-item-action py-3">
+                            <span class="badge bg-warning-subtle text-warning-emphasis me-2">🍳</span>
+                            <span class="small fw-semibold">{{ desayunos[i]["nombre"] }}</span>
+                        </a>
+                        <a href="/receta/{{ cenas[i+7]['id_receta'] }}" class="list-group-item list-group-item-action py-3">
+                            <span class="badge bg-success-subtle text-success-emphasis me-2">🥗</span>
+                            <span class="small fw-semibold">{{ cenas[i]["nombre"] }}</span>
+                        </a>
+                        <a href="/receta/{{ cenas[i]['id_receta'] }}" class="list-group-item list-group-item-action py-3">
+                            <span class="badge bg-info-subtle text-info-emphasis me-2">🌙</span>
+                            <span class="small fw-semibold">{{ cenas[i+7]["nombre"] }}</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <button class="btn m-3 btn-outline-danger px-4 rounded-pill fw-semibold shadow-sm noPdf" onclick="exportarPDF()">
+        <i class="bi bi-file-earmark-pdf me-2"></i>Exportar PDF
+    </button>
+    <div class="card border-0 shadow-sm mt-5 bg-white">
+    <div class="card-body p-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="fw-bold mb-0 text-dark">🛒 Lista de Compras Unificada</h5>
+            <span class="badge bg-light text-muted border">{{ ingredientes|length }} items</span>
+        </div>
+
+        <div class="row g-2">
+            {% for ingrediente in ingredientes %}
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="p-2 border rounded-3 d-flex align-items-center bg-light-subtle">
+                        <input class="form-check-input me-3 ms-1" type="checkbox" id="check-{{ loop.index }}">
+                        <label class="ingre form-check-label text-secondary small text-truncate ingrediente-texto" for="check-{{ loop.index }}">
+                            {{ ingrediente }}
+                        </label>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="d-flex gap-2 mt-4 pt-3 border-top">
+            <button class="btn btn-outline-success px-4 rounded-pill fw-semibold shadow-sm" onclick="copiarLista()">
+                <i class="bi bi-clipboard-check me-2"></i>Copiar lista
+            </button>
+            <button class="btn btn-success px-4 rounded-pill fw-semibold shadow-sm" onclick="enviarWhatsApp()">
+                <i class="bi bi-whatsapp me-2"></i>Enviar por WhatsApp
+            </button>
+        </div>
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+{% endblock %}

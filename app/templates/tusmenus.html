@@ -1,0 +1,71 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Mi usuario
+{% endblock %}
+
+{% block main %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-8">
+             <div class="card shadow-sm border-0 bg-white">
+                <div class="card-body p-4">
+                    
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="fw-bold mb-0">📅 Tus Menús Semanales</h4>
+                        <a href="/" class="btn btn-primary btn-sm px-3 rounded-pill">
+                            <i class="bi bi-calendar-plus"></i> Nuevo Menú
+                        </a>
+                    </div>
+
+                    {% if menus %}
+                        <div class="list-group list-group-flush border rounded-3">
+                            {% for menu in menus %}
+                            <div class="list-group-item list-group-item-action py-3">
+                                <div class="d-flex align-items-center justify-content-between flex-nowrap">
+                                    
+                                    <div class="d-flex align-items-center gap-3 overflow-hidden">
+                                        <div class="bg-primary-subtle text-primary rounded p-2 d-none d-sm-block">
+                                            <i class="bi bi-calendar3"></i>
+                                        </div>
+                                        <div class="text-truncate">
+                                            <h6 class="fw-bold mb-0 text-dark">Menú del {{ menu['fecha'] }}</h6>
+                                        </div>
+                                    </div>
+
+                                    <div class="d-flex gap-1 flex-shrink-0 ms-3">
+                                        <a href="{{ url_for('menu', id=menu['id_menu']) }}" 
+                                           class="btn btn-sm btn-light border-0 text-primary p-1 px-2" title="Ver detalle">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a href="{{ url_for('editar_menu', id=menu['id_menu']) }}" 
+                                        class="btn btn-sm btn-light border-0 text-secondary p-1 px-2" title="Editar">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <form action="{{ url_for('eliminar_menu') }}" method="post" class="d-inline">
+                                            <input type="hidden" name="id_menu" value="{{ menu['id_menu'] }}">
+                                            <button type="submit" class="btn btn-sm btn-light border-0 text-danger p-1 px-2" 
+                                                    onclick="return confirm('¿Eliminar este menú permanente?');" title="Eliminar">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="text-center py-5 bg-light rounded-3 border border-dashed">
+                            <i class="bi bi-calendar-x display-4 text-muted"></i>
+                            <p class="text-muted mt-2">Aún no has organizado tu semana.</p>
+                            <a href="/" class="btn btn-outline-primary btn-sm mt-2">Generar mi primer menú</a>
+                        </div>
+                    {% endif %}
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

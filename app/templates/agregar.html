@@ -1,0 +1,145 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    {{ 'Editar receta' if receta else 'Agregar receta'}}
+{% endblock %}
+
+{% block main %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-7">
+            
+            <form action="{{ '/editar_receta/' ~ receta['id_receta'] if receta else '/agregar' }}" method="post" enctype="multipart/form-data" class="card shadow-lg p-4 border-0 bg-light">
+                <h4 class="mb-4 text-center fw-semibold">{{ 'Editar receta' if receta else 'Agregar receta'}}</h4>
+                <div class="mb-3">
+                    <input autocomplete="off" autofocus class="form-control" name="nombre" placeholder="Nombre de la receta" type="text" required
+                    value="{{ receta['nombre'] if receta else '' }}">
+                </div>
+                <select class="form-select mb-3" name="comida" required>
+                    <option disabled {{ 'selected' if not receta }}>Tipo de comida</option>
+                    {% for opcion in ['desayuno', 'almuerzo', 'cena', 'postre'] %}
+                        <option value="{{ opcion }}" {{ 'selected' if receta and receta.comida == opcion }}>
+                            {{ opcion|capitalize }}
+                        </option>
+                    {% endfor %}
+                </select>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold">Tiempo estimado:</label>
+                    <input class="form-control" name="tiempo" type="number" placeholder="Minutos"
+                        value="{{ receta['tiempo'] if receta else ''}}">
+                    
+                    <label for="ingredientes" class="form-label fw-semibold">Ingredientes:</label>
+                    <div id="lista-ingredientes" class="d-flex flex-column gap-2">
+                        {% if receta and ingredientes %}
+                            {% for ing in ingredientes %}
+                            <div class="d-flex gap-2 mb-2">
+                                <input type="text" name="ingredientes" class="form-control" value="{{ ing }}">
+                                <button type="button" class="btn btn-outline-danger btn-sm" onclick="this.parentElement.remove()">x</button>
+                            </div>
+                            {% endfor %}
+                        {% else %}
+                            <input type="text" name="ingredientes" class="form-control" placeholder="Ej: Harina">
+                        {% endif %}
+                    </div>
+                    <div class="d-flex flex-column gap-2">
+                        <button type="button" class="btn btn-outline-primary mt-2" onclick="agregarIngrediente()">
+                        + Agregar ingrediente
+                        </button>
+                    </div>
+                    <label for="instrucciones" class="form-label fw-semibold">Instrucciones:</label>
+                    <textarea class="form-control" name="instrucciones" id="instrucciones" 
+                    rows="3" placeholder="Ej: Batir los huevos, ..."> {{ receta['instrucciones'] if receta else '' }}
+                    </textarea>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label fw-semibold d-block">Rango de Precio:</label>
+                    <div class="btn-group w-100" role="group" aria-label="Selección de precio">
+                        
+                        <input type="radio" class="btn-check" name="rango_precio" id="precio1" value="1" 
+                            {% if receta and receta.precio_estimado == 1 %}checked{% endif %} required>
+                        <label class="btn btn-outline-success" for="precio1" title="Económico">
+                            <i class="bi bi-currency-dollar"></i>
+                        </label>
+
+                        <input type="radio" class="btn-check" name="rango_precio" id="precio2" value="2" 
+                            {% if (receta and receta.precio_estimado == 2) or not receta %}checked{% endif %}>
+                        <label class="btn btn-outline-success" for="precio2" title="Medio">
+                            <i class="bi bi-currency-dollar"></i><i class="bi bi-currency-dollar"></i>
+                        </label>
+
+                        <input type="radio" class="btn-check" name="rango_precio" id="precio3" value="3" 
+                            {% if receta and receta.precio_estimado == 3 %}checked{% endif %}>
+                        <label class="btn btn-outline-success" for="precio3" title="Gourmet / Caro">
+                            <i class="bi bi-currency-dollar"></i><i class="bi bi-currency-dollar"></i><i class="bi bi-currency-dollar"></i>
+                        </label>
+                        
+                    </div>
+                    <div class="form-text mt-2">
+                        Seleccioná el costo estimado de los ingredientes.
+                    </div>
+                </div>
+                <div class="mb-3">
+                <label class="form-label fw-semibold">Etiquetas / Tipo:</label>
+
+                <div class="d-flex align-items-center border rounded p-2 mb-2 bg-white">
+                    <input class="form-check-input me-2 position-static" type="radio" name="tipo" 
+                    value="C" id="carnivoro" {{ 'checked' if receta and receta.tipo == 'C' }}>
+                    <label class="form-check-label fw-semibold mb-0" for="carnivoro">
+                        🥩 Clásica / completa
+                    </label>
+                </div>
+
+                <div class="d-flex align-items-center border rounded p-2 mb-2 bg-white">
+                    <input class="form-check-input me-2 position-static" type="radio" name="tipo" 
+                    value="V" id="vegano" {{ 'checked' if receta and receta.tipo == 'V' }}>
+                    <label class="form-check-label fw-semibold mb-0" for="vegano">
+                        🌿 Vegano
+                    </label>
+                </div>
+
+                <div class="d-flex align-items-center border rounded p-2 mb-2 bg-white">
+                    <input class="form-check-input me-2 position-static" type="radio" name="tipo" 
+                    value="G" id="singluten" {{ 'checked' if receta and receta.tipo == 'G' }}>
+                    <label class="form-check-label fw-semibold mb-0" for="singluten">
+                        Sin gluten
+                    </label>
+                </div>
+                </div>
+                <div class="form-check form-switch mt-3">
+                    <input class="form-check-input" type="checkbox" id="publica" name="publica"
+                    {{ 'checked' if receta and receta.publica == 1 }}>
+                    <label class="form-check-label" for="publica">
+                        Receta pública (otros usuarios podrán verla)
+                    </label>
+                </div>
+                <div class="mb-3">
+                    <label for="imagen" class="form-label fw-semibold">Foto de la receta:</label>
+                    <input class="form-control" type="file" id="imagen" name="imagen" accept="image/*">
+                    <div class="form-text">Formatos permitidos: JPG, PNG, GIF.</div>
+                </div>
+
+                <div class="mb-3">
+                    <img id="preview" src="#" alt="Previsualización" class="img-thumbnail d-none" style="max-height: 200px;">
+                </div>
+                <button class="btn btn-primary w-100 mt-3" type="submit">
+                        {{ 'Guardar Cambios' if receta else 'Agregar Receta' }}
+                </button>
+            </form>
+
+        </div>
+    </div>
+</div>
+<script>
+    // JS para mostrar la imagen apenas se selecciona
+    document.getElementById('imagen').onchange = evt => {
+        const [file] = document.getElementById('imagen').files
+        if (file) {
+            const preview = document.getElementById('preview');
+            preview.src = URL.createObjectURL(file);
+            preview.classList.remove('d-none');
+        }
+    }
+</script>
+{% endblock %}

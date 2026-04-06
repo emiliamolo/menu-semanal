@@ -1,0 +1,110 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Receta
+{% endblock %}
+
+{% block main %}
+<div class="container my-5">
+    <div class="card border-0 shadow-sm mb-5 overflow-hidden">
+        <div class="row g-0 align-items-stretch">
+            
+            <div class="col-md-5 col-lg-4 bg-light d-flex align-items-center justify-content-center border-end">
+                {% if receta.image_ruta %}
+                    <img src="{{ url_for('static', filename='img/recetas/' + receta.image_ruta) }}" 
+                         class="img-fluid h-100 w-100 object-fit-cover" 
+                         alt="{{ receta.nombre }}">
+                {% else %}
+                    <div class="py-5 text-center">
+                        <i class="bi bi-journal-richtext display-1 text-secondary opacity-25"></i>
+                        <p class="text-muted small">Sin foto disponible</p>
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="col-md-7 col-lg-8">
+                <div class="card-body p-4 p-lg-5 h-100 d-flex flex-column justify-content-center">
+                    
+                    <div class="mb-3">
+                        <span class="text-uppercase tracking-wider small fw-bold text-primary mb-2 d-block">
+                            <i class="bi bi-egg-fried me-1"></i> {{ receta['comida']|capitalize }}
+                        </span>
+                        <h1 class="display-5 fw-bold text-dark mb-0">{{ receta['nombre'] }}</h1>
+                    </div>
+
+                    <div class="d-flex flex-wrap align-items-center gap-2 mb-4">
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-2 rounded-pill">
+                            <i class="bi bi-stopwatch me-1"></i> {{ receta['tiempo'] }} min
+                        </span>
+                        
+                        {% if receta['tipo'] == 'V' %}
+                            <span class="badge bg-success-subtle text-success border border-success-subtle px-3 py-2 rounded-pill">🌿 Vegano</span>
+                        {% elif receta['tipo'] == 'G' %}
+                            <span class="badge bg-warning-subtle text-warning border border-warning-subtle px-3 py-2 rounded-pill">🌾 Sin Gluten</span>
+                        {% endif %}
+
+                        {% if receta.precio_estimado %}
+                            <div class="ms-2 px-3 py-1 bg-light rounded-pill border">
+                                <span class="text-success fw-bold">{% for i in range(receta.precio_estimado | int) %}${% endfor %}</span>
+                                <span class="text-muted opacity-25">{% for i in range(3 - (receta.precio_estimado | int)) %}${% endfor %}</span>
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <div class="d-flex flex-wrap justify-content-between align-items-center pt-3 border-top gap-3">
+                        <div class="d-flex gap-2">
+                            <button class="btn btn-success btn-sm px-3 rounded-pill" onclick="enviarWhatsApp()"><i class="bi bi-whatsapp"></i></button>
+                            <button class="btn btn-outline-secondary btn-sm px-3 rounded-pill" onclick="copiarLista()"><i class="bi bi-clipboard"></i></button>
+                            <form action="{{ url_for('marcar_favorita') }}" method="post" class="d-inline">
+                                <input type="hidden" name="id_receta" value="{{ receta['id_receta'] }}">
+                                <button type="submit" class="btn {{ 'btn-warning text-white' if es_favorita else 'btn-outline-warning' }} btn-sm px-3 rounded-pill">
+                                    <i class="bi bi-star{{ '-fill' if es_favorita }}"></i>
+                                </button>
+                            </form>
+                        </div>
+                        
+                        {% if dueño %}
+                        <div class="small text-muted">
+                            <i class="bi bi-person-circle"></i>
+                            <a href="{{ url_for('ver_recetas', otro_user_id=dueño.id_usuario) }}" class="fw-bold">Receta de {{ dueño['nombre'] }}</a> 
+                        </div>
+                        {% endif %}
+                    </div>
+                </div> </div> </div> </div> <div class="row g-4">
+        <div class="col-12 col-lg-4">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-0 pt-4 px-4">
+                    <h5 class="fw-bold mb-0"><i class="bi bi-cart-check text-primary me-2"></i> Ingredientes</h5>
+                </div>
+                <div class="card-body px-4 pb-4">
+                    <div class="list-group list-group-flush">
+                        {% for ingrediente in ingredientes %}
+                        <div class="list-group-item bg-transparent border-0 d-flex align-items-start px-0 py-2">
+                            <input class="form-check-input me-3 mt-1 flex-shrink-0" type="checkbox" id="ing-{{ loop.index }}">
+                            <label class="form-check-label text-secondary ingrediente-texto for="ing-{{ loop.index }}">
+                                {{ ingrediente|capitalize }}
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-8">
+            <div class="card border-0 shadow-sm h-100">
+                <div class="card-header bg-white border-0 pt-4 px-4">
+                    <h5 class="fw-bold mb-0"><i class="bi bi-journal-text text-primary me-2"></i>Preparación</h5>
+                </div>
+                <div class="card-body px-4 pb-4">
+                    <div class="p-4 bg-light rounded-4">
+                        <p class="mb-0 text-dark lh-lg" style="white-space: pre-line; text-align: justify; font-size: 1.05rem;">
+                            {{ receta['instrucciones'] }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> </div>
+
+{% endblock %}
