@@ -6,7 +6,7 @@
 
 ## 🚀 Demo
 Puedes acceder a la aplicación en vivo aquí:  
-👉 **[Ver Demo en Vivo](https://mi-menu.up.railway.app/)**
+👉 **[Ver Demo en Vivo](https://menu-semanal-3psp.onrender.com)**
 
 
 ---
@@ -17,7 +17,7 @@ Puedes acceder a la aplicación en vivo aquí:
 * **👥 Comunidad y Privacidad:** Sistema de recetas con visibilidad configurable (Públicas/Privadas). Explora recetas de otros usuarios o gestiona tu propio recetario personal.
 * **📄 Exportación y Compartición:** Generación automática de menús en formato **PDF** y envío directo a través de **WhatsApp**.
 * **🔐 Seguridad Avanzada:** Recuperación de cuenta mediante tokens temporales y hashing de contraseñas.
-* **☁️ Cloud Ready:** Configuración optimizada para despliegue continuo en **Railway** con persistencia de datos.
+* **☁️ Cloud Ready:** Configuración optimizada para despliegue continuo en **Render** con persistencia de datos.
 
 ---
 
@@ -28,7 +28,7 @@ Puedes acceder a la aplicación en vivo aquí:
 | **Backend** | Python 3.x + Flask |
 | **Base de Datos** | SQLite3 (con volumen persistente en disco) |
 | **Frontend** | HTML5, CSS3, Jinja2 |
-| **Infraestructura** | Gunicorn, Railway |
+| **Infraestructura** | Gunicorn, Render |
 | **Servicios Externos** | Resend API (Email Delivery) |
 
 ---
