@@ -1,0 +1,11 @@
+services:
+  web:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - .:/app
+      - ./db:/app/db
+    env_file:
+      - .env
+    command: flask run --host=0.0.0.0

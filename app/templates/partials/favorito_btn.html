@@ -1,0 +1,13 @@
+{% if session.get('user_id') %}
+<button hx-post="{{ url_for('marcar_favorita') }}" 
+        hx-vals='{"id_receta": "{{ id_receta }}"}'
+        hx-swap="outerHTML"
+        class="btn {{ 'btn-warning text-white' if es_favorita else 'btn-outline-warning' }} btn-sm px-3 rounded-pill">
+    <i class="bi bi-star{{ '-fill' if es_favorita }}"></i>
+</button>
+{% else %}
+<a href="{{ url_for('login', next=url_for('receta', id=id_receta)) }}" 
+   class="btn btn-outline-warning btn-sm px-3 rounded-pill">
+    <i class="bi bi-star"></i>
+</a>
+{% endif %}

@@ -1,12 +1,15 @@
 from flask import render_template, request, redirect, flash, session, url_for, current_app
 from flask_session import Session
-from app import app
+from flask_caching import Cache
+from app import app, cache
 import app.models as models
 from app.helpers import login_required, apology, enviar_mail
 from werkzeug.security import check_password_hash, generate_password_hash
 from secrets import token_urlsafe
 from werkzeug.utils import secure_filename
 import os
+
+
 
 @app.route("/", methods=["GET", "POST"])
 def buscar():
@@ -39,7 +42,17 @@ def buscar():
             return redirect("/menu")
 
     
-        resultados = models.search_recetas(query_texto, comida_db, tipos, id_usuario,limite,offset)
+        resultados = models.search_recetas(query_texto, comida_db, tipos, id_usuario, limite, offset)
+        
+        if request.headers.get('HX-Request'):
+            return render_template('partials/recetas_grid.html', 
+                                   recetas=resultados, 
+                                   query=query_texto, 
+                                   current_comida=comida_original, 
+                                   tipos_seleccionados=tipos,
+                                   page=page,
+                                   hay_mas=len(resultados)==limite)
+
         return render_template('index.html', 
                                recetas=resultados, 
                                query=query_texto, 
@@ -49,6 +62,15 @@ def buscar():
                                hay_mas=len(resultados)==limite)
 
     resultados = models.search_recetas("", comida_db, tipos, id_usuario, limite, offset)
+    
+    if request.headers.get('HX-Request'):
+        return render_template('partials/recetas_grid.html', 
+                               recetas=resultados, 
+                               current_comida=comida_original, 
+                               tipos_seleccionados=tipos,
+                               page=page,
+                               hay_mas=len(resultados)==limite)
+
     return render_template('index.html', 
                            recetas=resultados, 
                            current_comida=comida_original, 
@@ -118,6 +140,8 @@ def agregar():
         datos_receta["publica"] = 1 if request.form.get("publica") else 0
         datos_receta["id_usuario"] = session["user_id"]
         if models.insertar_receta(datos_receta):
+            # Limpiamos el caché de búsqueda para que aparezca la nueva receta
+            cache.clear()
             nombre = datos_receta["nombre"]
             flash(f"Receta '{nombre}' agregada con éxito", "success")
             return redirect("/")
@@ -160,6 +184,9 @@ def editar_receta(id):
         datos_receta["publica"] = 1 if request.form.get("publica") else 0
         datos_receta["id_usuario"] = session["user_id"]
         if models.editar_receta(datos_receta):
+            # Limpiamos el caché para reflejar cambios
+            cache.delete_memoized(receta, id)
+            cache.clear()
             flash(f"Receta '{datos_receta['nombre']}' editada con éxito", "success")
             return redirect("/")
         else:
@@ -326,6 +353,7 @@ def registrarse():
     
 
 @app.route("/receta/<int:id>")
+@cache.memoize(timeout=300)
 def receta(id):
     receta, ingredientes = models.get_receta(id)
     if receta is None:
@@ -440,11 +468,16 @@ def marcar_favorita():
     if ya_es:
         # 2. Si ya es, la quitamos (Toggle OFF)
         models.quitar_favorito(id_usuario, id_receta)
-        flash("Quitada de tus favoritas")
+        es_favorita = False
     else:
         # 3. Si no es, la agregamos (Toggle ON)
         models.agregar_favorito(id_usuario, id_receta)
-        flash("¡Guardada en tus favoritas! ⭐")
+        es_favorita = True
+
+    if request.headers.get('HX-Request'):
+        return render_template('partials/favorito_btn.html', 
+                               id_receta=id_receta, 
+                               es_favorita=es_favorita)
 
     # Redirigimos de vuelta a la receta para ver el cambio en el botón
     return redirect(url_for('receta', id=id_receta))

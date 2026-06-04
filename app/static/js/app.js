@@ -115,3 +115,20 @@ function exportarPDF() {
     // Importante: No hace falta agregarlo al body, html2pdf puede leerlo desde la memoria
     html2pdf().set(opciones).from(contenedorTemporal).save();
 }
+
+let timeout = null;
+
+document.getElementById('buscador').addEventListener('input', (e) => {
+    clearTimeout(timeout); // Cancela la petición anterior si el usuario sigue escribiendo
+    
+    timeout = setTimeout(async () => {
+        const query = e.target.value;
+        if (query.length < 3) return;
+
+        console.log("Buscando..."); // Esto solo se ejecuta cuando el usuario para de escribir
+        const response = await fetch(`/api/recetas?q=${query}`);
+        const datos = await response.json();
+        
+        // ... lógica para mostrar los datos ...
+    }, 500); // 500ms de espera
+});

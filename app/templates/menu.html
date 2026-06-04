@@ -28,9 +28,13 @@
                     <th class="px-4 text-secondary"><i class="bi bi-cup-hot me-2"></i>Desayuno</th>
                     {% for i in range(7) %}
                         <td class="text-center">
-                            <a href="/receta/{{ desayunos[i]['id_receta'] }}" class="text-decoration-none fw-medium link-primary small">
-                                {{ desayunos[i]["nombre"] }}
-                            </a>
+                            {% if desayunos[i] %}
+                                <a href="/receta/{{ desayunos[i]['id_receta'] }}" class="text-decoration-none fw-medium link-primary small">
+                                    {{ desayunos[i]["nombre"] }}
+                                </a>
+                            {% else %}
+                                <span class="text-muted small">No asignado</span>
+                            {% endif %}
                         </td>
                     {% endfor %}
                 </tr>
@@ -39,9 +43,13 @@
                     <th class="px-4 text-secondary"><i class="bi bi-sun me-2"></i>Almuerzo</th>
                     {% for i in range(7) %}
                         <td class="text-center">
-                            <a href="/receta/{{cenas[i+7]['id_receta']}}" class="text-decoration-none fw-medium link-success small">
-                                {{ cenas[i]["nombre"] }}
-                            </a>
+                            {% if cenas[i] %}
+                                <a href="/receta/{{ cenas[i]['id_receta'] }}" class="text-decoration-none fw-medium link-success small">
+                                    {{ cenas[i]["nombre"] }}
+                                </a>
+                            {% else %}
+                                <span class="text-muted small">No asignado</span>
+                            {% endif %}
                         </td>
                     {% endfor %}
                 </tr>
@@ -50,9 +58,13 @@
                     <th class="px-4 text-secondary"><i class="bi bi-moon-stars me-2"></i>Cena</th>
                     {% for i in range(7) %}
                         <td class="text-center">
-                            <a href="/receta/{{cenas[i]['id_receta']}}" class="text-decoration-none fw-medium link-indigo small" style="color: #6610f2;">
-                                {{ cenas[i+7]["nombre"] }}
-                            </a>
+                            {% if cenas[i+7] %}
+                                <a href="/receta/{{ cenas[i+7]['id_receta'] }}" class="text-decoration-none fw-medium link-indigo small" style="color: #6610f2;">
+                                    {{ cenas[i+7]["nombre"] }}
+                                </a>
+                            {% else %}
+                                <span class="text-muted small">No asignado</span>
+                            {% endif %}
                         </td>
                     {% endfor %}
                 </tr>
@@ -67,18 +79,26 @@
                 </div>
                 <div class="card-body p-0">
                     <div class="list-group list-group-flush">
+                        {% if desayunos[i] %}
                         <a href="/receta/{{ desayunos[i]['id_receta'] }}" class="list-group-item list-group-item-action py-3">
                             <span class="badge bg-warning-subtle text-warning-emphasis me-2">🍳</span>
                             <span class="small fw-semibold">{{ desayunos[i]["nombre"] }}</span>
                         </a>
-                        <a href="/receta/{{ cenas[i+7]['id_receta'] }}" class="list-group-item list-group-item-action py-3">
+                        {% endif %}
+                        
+                        {% if cenas[i] %}
+                        <a href="/receta/{{ cenas[i]['id_receta'] }}" class="list-group-item list-group-item-action py-3">
                             <span class="badge bg-success-subtle text-success-emphasis me-2">🥗</span>
                             <span class="small fw-semibold">{{ cenas[i]["nombre"] }}</span>
                         </a>
-                        <a href="/receta/{{ cenas[i]['id_receta'] }}" class="list-group-item list-group-item-action py-3">
+                        {% endif %}
+                        
+                        {% if cenas[i+7] %}
+                        <a href="/receta/{{ cenas[i+7]['id_receta'] }}" class="list-group-item list-group-item-action py-3">
                             <span class="badge bg-info-subtle text-info-emphasis me-2">🌙</span>
                             <span class="small fw-semibold">{{ cenas[i+7]["nombre"] }}</span>
                         </a>
+                        {% endif %}
                     </div>
                 </div>
             </div>

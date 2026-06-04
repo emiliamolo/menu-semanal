@@ -25,3 +25,17 @@ nav .navbar-brand .green
 @media print {
     .btn, .navbar, .noPdf { display: none !important; }
 }
+.htmx-indicator {
+    display: none;
+}
+.htmx-request .htmx-indicator {
+    display: block;
+}
+.htmx-request.htmx-indicator {
+    display: block;
+}
+
+/* Fix para imágenes estiradas (Bootstrap < 5.3) */
+.object-fit-cover {
+    object-fit: cover;
+}

@@ -1,0 +1,26 @@
+<div id="filtros-comida" class="d-flex flex-wrap gap-2 justify-content-center mt-3" hx-swap-oob="true">
+    <a href="{{ url_for('buscar', comida='todas') }}" 
+       hx-get="{{ url_for('buscar', comida='todas') }}" 
+       hx-target="#resultados-busqueda" 
+       hx-swap="outerHTML"
+       hx-push-url="true"
+       class="badge rounded-pill {{ 'bg-dark text-white' if current_comida == 'todas' else 'bg-light text-dark border' }} text-decoration-none px-3 py-2">Todo</a>
+    <a href="{{ url_for('buscar', comida='almuerzo') }}" 
+       hx-get="{{ url_for('buscar', comida='almuerzo') }}" 
+       hx-target="#resultados-busqueda" 
+       hx-swap="outerHTML"
+       hx-push-url="true"
+       class="badge rounded-pill {{ 'bg-dark text-white' if current_comida == 'almuerzo' else 'bg-light text-dark border' }} text-decoration-none px-3 py-2">Almuerzos</a>
+    <a href="{{ url_for('buscar', comida='cena') }}" 
+       hx-get="{{ url_for('buscar', comida='cena') }}" 
+       hx-target="#resultados-busqueda" 
+       hx-swap="outerHTML"
+       hx-push-url="true"
+       class="badge rounded-pill {{ 'bg-dark text-white' if current_comida == 'cena' else 'bg-light text-dark border' }} text-decoration-none px-3 py-2">Cenas</a>
+    <a href="{{ url_for('buscar', comida='desayuno') }}" 
+       hx-get="{{ url_for('buscar', comida='desayuno') }}" 
+       hx-target="#resultados-busqueda" 
+       hx-swap="outerHTML"
+       hx-push-url="true"
+       class="badge rounded-pill {{ 'bg-dark text-white' if current_comida == 'desayuno' else 'bg-light text-dark border' }} text-decoration-none px-3 py-2">Desayunos</a>
+</div>
